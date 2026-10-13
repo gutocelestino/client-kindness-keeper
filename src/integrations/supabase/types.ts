@@ -14,7 +14,113 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      clients: {
+        Row: {
+          brigadeiro: string
+          client_type: string | null
+          created_at: string
+          email: string | null
+          extra_fields: Json
+          first_registered_at: string | null
+          full_name: string
+          id: string
+          instagram: string | null
+          is_example: boolean
+          last_contact_at: string | null
+          last_visit_date: string | null
+          notes: string | null
+          phone: string | null
+          qualification: string
+          return_frequency_days: number | null
+          scissor_cut: string
+          services: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          brigadeiro?: string
+          client_type?: string | null
+          created_at?: string
+          email?: string | null
+          extra_fields?: Json
+          first_registered_at?: string | null
+          full_name: string
+          id?: string
+          instagram?: string | null
+          is_example?: boolean
+          last_contact_at?: string | null
+          last_visit_date?: string | null
+          notes?: string | null
+          phone?: string | null
+          qualification?: string
+          return_frequency_days?: number | null
+          scissor_cut?: string
+          services?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          brigadeiro?: string
+          client_type?: string | null
+          created_at?: string
+          email?: string | null
+          extra_fields?: Json
+          first_registered_at?: string | null
+          full_name?: string
+          id?: string
+          instagram?: string | null
+          is_example?: boolean
+          last_contact_at?: string | null
+          last_visit_date?: string | null
+          notes?: string | null
+          phone?: string | null
+          qualification?: string
+          return_frequency_days?: number | null
+          scissor_cut?: string
+          services?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      visits: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          note: string | null
+          service: string | null
+          user_id: string | null
+          visit_date: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          service?: string | null
+          user_id?: string | null
+          visit_date: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          service?: string | null
+          user_id?: string | null
+          visit_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visits_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
