@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAjustesRouteImport } from './routes/_authenticated/ajustes'
 import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated/clientes'
+import { Route as AuthenticatedDadosRouteImport } from './routes/_authenticated/dados'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedRegistrarRouteImport } from './routes/_authenticated/registrar'
 import { Route as AuthenticatedRetornosRouteImport } from './routes/_authenticated/retornos'
@@ -43,6 +44,11 @@ const AuthenticatedClientesRoute = AuthenticatedClientesRouteImport.update({
   path: '/clientes',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDadosRoute = AuthenticatedDadosRouteImport.update({
+  id: '/dados',
+  path: '/dados',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
   id: '/painel',
   path: '/painel',
@@ -69,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/ajustes': typeof AuthenticatedAjustesRoute
   '/clientes': typeof AuthenticatedClientesRoute
+  '/dados': typeof AuthenticatedDadosRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/registrar': typeof AuthenticatedRegistrarRoute
   '/retornos': typeof AuthenticatedRetornosRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/ajustes': typeof AuthenticatedAjustesRoute
   '/clientes': typeof AuthenticatedClientesRoute
+  '/dados': typeof AuthenticatedDadosRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/registrar': typeof AuthenticatedRegistrarRoute
   '/retornos': typeof AuthenticatedRetornosRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/ajustes': typeof AuthenticatedAjustesRoute
   '/_authenticated/clientes': typeof AuthenticatedClientesRoute
+  '/_authenticated/dados': typeof AuthenticatedDadosRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/registrar': typeof AuthenticatedRegistrarRoute
   '/_authenticated/retornos': typeof AuthenticatedRetornosRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/ajustes'
     | '/clientes'
+    | '/dados'
     | '/painel'
     | '/registrar'
     | '/retornos'
@@ -113,6 +123,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/ajustes'
     | '/clientes'
+    | '/dados'
     | '/painel'
     | '/registrar'
     | '/retornos'
@@ -124,6 +135,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/ajustes'
     | '/_authenticated/clientes'
+    | '/_authenticated/dados'
     | '/_authenticated/painel'
     | '/_authenticated/registrar'
     | '/_authenticated/retornos'
@@ -173,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedClientesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dados': {
+      id: '/_authenticated/dados'
+      path: '/dados'
+      fullPath: '/dados'
+      preLoaderRoute: typeof AuthenticatedDadosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/painel': {
       id: '/_authenticated/painel'
       path: '/painel'
@@ -207,6 +226,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAjustesRoute: typeof AuthenticatedAjustesRoute
   AuthenticatedClientesRoute: typeof AuthenticatedClientesRoute
+  AuthenticatedDadosRoute: typeof AuthenticatedDadosRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedRegistrarRoute: typeof AuthenticatedRegistrarRoute
   AuthenticatedRetornosRoute: typeof AuthenticatedRetornosRoute
@@ -216,6 +236,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAjustesRoute: AuthenticatedAjustesRoute,
   AuthenticatedClientesRoute: AuthenticatedClientesRoute,
+  AuthenticatedDadosRoute: AuthenticatedDadosRoute,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedRegistrarRoute: AuthenticatedRegistrarRoute,
   AuthenticatedRetornosRoute: AuthenticatedRetornosRoute,
