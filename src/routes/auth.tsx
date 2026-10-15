@@ -39,7 +39,10 @@ function AuthPage() {
     if (mode === "in") {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       setBusy(false);
-      if (error) return toast.error("E-mail ou senha incorretos");
+      if (error) {
+        toast.error("E-mail ou senha incorretos");
+        return;
+      }
       navigate({ to: "/painel" });
     } else {
       const { error } = await supabase.auth.signUp({
@@ -48,7 +51,10 @@ function AuthPage() {
         options: { emailRedirectTo: window.location.origin },
       });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
       setSent(true);
     }
   }

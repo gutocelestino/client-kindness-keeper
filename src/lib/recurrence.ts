@@ -10,16 +10,16 @@ export function todayISO(now: Date = new Date()): string {
 }
 
 export function addDays(iso: string, days: number): string {
-  const [y, m, d] = iso.split("-").map(Number);
+  const [y = 0, m = 1, d = 1] = iso.split("-").map(Number);
   const dt = new Date(Date.UTC(y, m - 1, d + days));
   return dt.toISOString().slice(0, 10);
 }
 
 export function diffDays(a: string, b: string): number {
-  const pa = a.split("-").map(Number);
-  const pb = b.split("-").map(Number);
+  const [ay = 0, am = 1, ad = 1] = a.split("-").map(Number);
+  const [by = 0, bm = 1, bd = 1] = b.split("-").map(Number);
   return Math.round(
-    (Date.UTC(pa[0], pa[1] - 1, pa[2]) - Date.UTC(pb[0], pb[1] - 1, pb[2])) / 86400000,
+    (Date.UTC(ay, am - 1, ad) - Date.UTC(by, bm - 1, bd)) / 86400000,
   );
 }
 
@@ -62,11 +62,14 @@ export function parseDateFlexible(v: unknown): string | null {
   const s = String(v).trim();
   let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
   if (m) {
-    const y = m[3].length === 2 ? `20${m[3]}` : m[3];
-    return `${y}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`;
+    const g3 = m[3] ?? "";
+    const g2 = m[2] ?? "";
+    const g1 = m[1] ?? "";
+    const y = g3.length === 2 ? `20${g3}` : g3;
+    return `${y}-${g2.padStart(2, "0")}-${g1.padStart(2, "0")}`;
   }
   m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+  if (m) return `${m[1] ?? ""}-${m[2] ?? ""}-${m[3] ?? ""}`;
   return null;
 }
 

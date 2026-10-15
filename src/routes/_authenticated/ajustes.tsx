@@ -25,13 +25,19 @@ function Ajustes() {
   async function removeExamples() {
     if (!confirm(`Remover ${examples} clientes marcados como exemplo?`)) return;
     const { error } = await supabase.from("clients").delete().eq("is_example", true);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Exemplos removidos");
     invalidate();
   }
   async function keepExamples() {
     const { error } = await supabase.from("clients").update({ is_example: false }).eq("is_example", true);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Clientes mantidos como reais");
     invalidate();
   }

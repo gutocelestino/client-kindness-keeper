@@ -31,14 +31,20 @@ function Ficha() {
   async function removeVisit(v: Visit) {
     if (!confirm(`Excluir o atendimento de ${formatBR(v.visit_date)}?`)) return;
     const { error } = await supabase.from("visits").delete().eq("id", v.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Atendimento excluído");
     invalidate();
   }
   async function removeClient() {
     if (!confirm(`Excluir ${c!.full_name} e todo o histórico?`)) return;
     const { error } = await supabase.from("clients").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     invalidate();
     navigate({ to: "/clientes" });
   }

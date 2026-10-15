@@ -44,7 +44,10 @@ export function ContactButton({ client, compact }: { client: ClientRow; compact?
   const invalidate = useInvalidateAll();
   async function mark() {
     const { error } = await supabase.from("clients").update({ last_contact_at: new Date().toISOString() }).eq("id", client.id);
-    if (error) return toast.error("Não foi possível registrar o contato");
+    if (error) {
+      toast.error("Não foi possível registrar o contato");
+      return;
+    }
     toast.success("Contato registrado");
     invalidate();
   }
