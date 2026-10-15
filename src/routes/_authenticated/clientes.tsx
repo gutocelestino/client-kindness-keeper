@@ -10,14 +10,19 @@ import { CLIENT_TYPE, QUALIFICATION, STATUS_LABEL, YES_NO, phoneDigits, useClien
 import { formatBR } from "@/lib/recurrence";
 
 type S = { q?: string; qual?: string; tipo?: string; tesoura?: string; brig?: string; status?: string; freq?: string; sort?: string };
-const str = (v: unknown) => (typeof v === "string" && v ? v : undefined);
 
 export const Route = createFileRoute("/_authenticated/clientes")({
   head: () => ({ meta: [{ title: "Clientes — Carteira" }, { name: "description", content: "Todos os clientes." }] }),
-  validateSearch: (s: Record<string, unknown>): S => ({
-    q: str(s.q), qual: str(s.qual), tipo: str(s.tipo), tesoura: str(s.tesoura), brig: str(s.brig),
-    status: str(s.status), freq: str(s.freq), sort: str(s.sort),
-  }),
+  validateSearch: (s: Record<string, unknown>): S => {
+    const out: S = {};
+    const pick = (k: keyof S) => {
+      const v = s[k];
+      if (typeof v === "string" && v) out[k] = v;
+    };
+    pick("q"); pick("qual"); pick("tipo"); pick("tesoura"); pick("brig");
+    pick("status"); pick("freq"); pick("sort");
+    return out;
+  },
   component: Clientes,
 });
 
@@ -82,7 +87,7 @@ function Clientes() {
         />
         <Select value={s.sort ?? "nome"} onChange={set("sort")} options={{ nome: "Ordenar: nome", ultimo: "Último atendimento", proximo: "Próxima data" }} />
         {active > 0 && (
-          <button onClick={() => navigate({ search: { q: s.q, sort: s.sort } })} className="flex h-10 items-center justify-center gap-1 rounded-md border text-sm text-muted-foreground">
+          <button onClick={() => { const rest: S = {}; if (s.q) rest.q = s.q; if (s.sort) rest.sort = s.sort; navigate({ search: rest }); }} className="flex h-10 items-center justify-center gap-1 rounded-md border text-sm text-muted-foreground">
             <X className="h-4 w-4" /> Limpar filtros
           </button>
         )}

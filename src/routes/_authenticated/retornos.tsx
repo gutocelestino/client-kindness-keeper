@@ -15,9 +15,10 @@ type Tab = keyof typeof TABS;
 
 export const Route = createFileRoute("/_authenticated/retornos")({
   head: () => ({ meta: [{ title: "Retornos — Carteira" }, { name: "description", content: "Quem precisa voltar." }] }),
-  validateSearch: (s: Record<string, unknown>): { tab?: Tab } => ({
-    tab: typeof s.tab === "string" && s.tab in TABS ? (s.tab as Tab) : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>): { tab?: Tab } => {
+    const t = s["tab"];
+    return typeof t === "string" && t in TABS ? { tab: t as Tab } : {};
+  },
   component: Retornos,
 });
 

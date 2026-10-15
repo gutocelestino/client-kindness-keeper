@@ -73,7 +73,10 @@ export function ClientForm({
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
-    if (!f.full_name.trim()) return toast.error("Informe o nome");
+    if (!f.full_name.trim()) {
+      toast.error("Informe o nome");
+      return;
+    }
     if (f.phone) {
       const found = await findByPhone(f.phone, client?.id);
       setDups(found);
@@ -104,7 +107,10 @@ export function ClientForm({
       ? await supabase.from("clients").update(payload).eq("id", client.id).select("id").single()
       : await supabase.from("clients").insert(payload).select("id").single();
     setBusy(false);
-    if (res.error) return toast.error("Erro ao salvar: " + res.error.message);
+    if (res.error) {
+      toast.error("Erro ao salvar: " + res.error.message);
+      return;
+    }
     toast.success(client ? "Cliente atualizado" : "Cliente cadastrado");
     invalidate();
     onOpenChange(false);

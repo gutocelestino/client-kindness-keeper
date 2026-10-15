@@ -18,7 +18,7 @@ export function VisitForm({
 }: {
   clientId: string;
   frequency: number | null;
-  visit?: Visit;
+  visit?: Visit | undefined;
   defaultService?: string | null;
   onDone?: () => void;
 }) {
@@ -31,14 +31,20 @@ export function VisitForm({
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
-    if (!date) return toast.error("Informe a data");
+    if (!date) {
+      toast.error("Informe a data");
+      return;
+    }
     setBusy(true);
     const payload = { client_id: clientId, visit_date: date, service: service.trim() || null, note: note.trim() || null };
     const { error } = visit
       ? await supabase.from("visits").update(payload).eq("id", visit.id)
       : await supabase.from("visits").insert(payload);
     setBusy(false);
-    if (error) return toast.error("Erro ao salvar: " + error.message);
+    if (error) {
+      toast.error("Erro ao salvar: " + error.message);
+      return;
+    }
     toast.success(visit ? "Atendimento corrigido" : "Atendimento registrado");
     invalidate();
     onDone?.();

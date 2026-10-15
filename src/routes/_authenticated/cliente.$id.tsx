@@ -31,14 +31,20 @@ function Ficha() {
   async function removeVisit(v: Visit) {
     if (!confirm(`Excluir o atendimento de ${formatBR(v.visit_date)}?`)) return;
     const { error } = await supabase.from("visits").delete().eq("id", v.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Atendimento excluído");
     invalidate();
   }
   async function removeClient() {
     if (!confirm(`Excluir ${c!.full_name} e todo o histórico?`)) return;
     const { error } = await supabase.from("clients").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     invalidate();
     navigate({ to: "/clientes" });
   }
@@ -78,7 +84,6 @@ function Ficha() {
         <KV k="Qualificação" v={QUALIFICATION[c.qualification as keyof typeof QUALIFICATION]} />
         <KV k="Corta na tesoura?" v={YES_NO[c.scissor_cut as keyof typeof YES_NO]} />
         <KV k="Tipo de cliente" v={c.client_type ? CLIENT_TYPE[c.client_type as keyof typeof CLIENT_TYPE] : "Não definido"} />
-        <KV k="Já fez brigadeiro?" v={YES_NO[c.brigadeiro as keyof typeof YES_NO]} />
         <KV k="Serviços contratados" v={c.services ?? "—"} />
         <KV k="Cadastrado em" v={formatBR(c.first_registered_at)} />
         {c.notes && <div className="md:col-span-2"><KV k="Observações" v={c.notes} /></div>}
