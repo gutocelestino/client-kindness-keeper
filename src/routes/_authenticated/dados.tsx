@@ -86,7 +86,7 @@ function Dados() {
     if (/\.(xlsx|xls)$/i.test(file.name)) {
       const XLSX = await import("xlsx");
       const wb = XLSX.read(await file.arrayBuffer());
-      const ws = wb.Sheets[wb.SheetNames[0] ?? ""];
+      const ws = wb.Sheets[wb.SheetNames[0] ?? ""] ?? {};
       data = XLSX.utils.sheet_to_json<string[]>(ws, { header: 1, raw: false, defval: "" });
     } else {
       data = Papa.parse<string[]>(await file.text(), { skipEmptyLines: false }).data;
