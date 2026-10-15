@@ -78,7 +78,6 @@ function Ficha() {
         <KV k="Qualificação" v={QUALIFICATION[c.qualification as keyof typeof QUALIFICATION]} />
         <KV k="Corta na tesoura?" v={YES_NO[c.scissor_cut as keyof typeof YES_NO]} />
         <KV k="Tipo de cliente" v={c.client_type ? CLIENT_TYPE[c.client_type as keyof typeof CLIENT_TYPE] : "Não definido"} />
-        <KV k="Já fez brigadeiro?" v={YES_NO[c.brigadeiro as keyof typeof YES_NO]} />
         <KV k="Serviços contratados" v={c.services ?? "—"} />
         <KV k="Cadastrado em" v={formatBR(c.first_registered_at)} />
         {c.notes && <div className="md:col-span-2"><KV k="Observações" v={c.notes} /></div>}
