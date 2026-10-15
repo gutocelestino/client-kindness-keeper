@@ -11,6 +11,7 @@ import { VisitForm } from "@/components/VisitForm";
 import { ContactButton, StatusBadge, WhatsAppButton } from "@/components/ClientCard";
 import { CLIENT_TYPE, QUALIFICATION, YES_NO, instagramUrl, useClient, useInvalidateAll, useVisits, type Visit } from "@/lib/clients";
 import { formatBR } from "@/lib/recurrence";
+import type { Json } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/cliente/$id")({
   head: () => ({ meta: [{ title: "Ficha do cliente — Carteira" }, { name: "description", content: "Ficha e histórico do cliente." }] }),
@@ -93,7 +94,7 @@ function Ficha() {
             key={c.updated_at}
             clientId={c.id}
             fields={extras}
-            orig={(c.extra_fields ?? {}) as Record<string, unknown>}
+            orig={(c.extra_fields ?? {}) as Record<string, Json>}
           />
         )}
       </div>
@@ -157,7 +158,7 @@ function KV({ k, v }: { k: string; v: string }) {
 }
 
 /** Inline editor for the extra fields imported from the spreadsheet. */
-function ExtrasEditor({ clientId, fields, orig }: { clientId: string; fields: [string, unknown][]; orig: Record<string, unknown> }) {
+function ExtrasEditor({ clientId, fields, orig }: { clientId: string; fields: [string, unknown][]; orig: Record<string, Json> }) {
   const invalidate = useInvalidateAll();
   const [draft, setDraft] = useState<Record<string, string>>(() =>
     Object.fromEntries(fields.map(([k, v]) => [k, String(v ?? "")])),
@@ -169,7 +170,7 @@ function ExtrasEditor({ clientId, fields, orig }: { clientId: string; fields: [s
 
   async function save() {
     setBusy(true);
-    const next: Record<string, unknown> = { ...orig };
+    const next: Record<string, Json> = { ...orig };
     for (const [k, v] of Object.entries(draft)) next[k] = v;
     for (const k of removed) next[k] = null;
     const { error } = await supabase
