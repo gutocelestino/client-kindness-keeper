@@ -1,14 +1,26 @@
-# Welcome to your Lovable project
+# Client Kindness Keeper
+
+https://docs.google.com/spreadsheets/d/1EmpYRnqxEb8_5kY2TJDMluQ6cozuZhmPLG80yYNVSrc/edit?usp=drivesdk
+
+
+
+
+
+
+
+Essa é minha planilha, mas não precisa já cadastrar todos os clientes. Pode registrar uns cinco só pra testar o software.
 
 This project was built with [Lovable](https://lovable.dev).
 
+**Live app**: https://client-kindness-keeper.lovable.app
+
 ## Build with Lovable
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/d78c9a78-3867-4904-856c-56b4661b4f26).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
@@ -20,10 +32,3 @@ cd <repository-name>
 npm i
 npm run dev
 ```
-
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
