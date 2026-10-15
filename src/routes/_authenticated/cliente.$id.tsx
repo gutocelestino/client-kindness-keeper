@@ -4,12 +4,14 @@ import { ArrowLeft, Instagram, Mail, Pencil, Phone, Plus, Trash2 } from "lucide-
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ClientForm } from "@/components/ClientForm";
 import { VisitForm } from "@/components/VisitForm";
 import { ContactButton, StatusBadge, WhatsAppButton } from "@/components/ClientCard";
 import { CLIENT_TYPE, QUALIFICATION, YES_NO, instagramUrl, useClient, useInvalidateAll, useVisits, type Visit } from "@/lib/clients";
 import { formatBR } from "@/lib/recurrence";
+import type { Json } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/cliente/$id")({
   head: () => ({ meta: [{ title: "Ficha do cliente — Carteira" }, { name: "description", content: "Ficha e histórico do cliente." }] }),
@@ -88,10 +90,12 @@ function Ficha() {
         <KV k="Cadastrado em" v={formatBR(c.first_registered_at)} />
         {c.notes && <div className="md:col-span-2"><KV k="Observações" v={c.notes} /></div>}
         {extras.length > 0 && (
-          <div className="border-t pt-3 md:col-span-2">
-            <div className="mb-2 text-xs uppercase text-muted-foreground">Outros dados da planilha</div>
-            {extras.map(([k, v]) => <KV key={k} k={k} v={String(v)} />)}
-          </div>
+          <ExtrasEditor
+            key={c.updated_at}
+            clientId={c.id}
+            fields={extras}
+            orig={(c.extra_fields ?? {}) as Record<string, Json>}
+          />
         )}
       </div>
 
@@ -151,4 +155,64 @@ function Row({ icon, v }: { icon: React.ReactNode; v: React.ReactNode }) {
 }
 function KV({ k, v }: { k: string; v: string }) {
   return <div className="flex justify-between gap-3 py-0.5"><span className="text-muted-foreground">{k}</span><span className="text-right whitespace-pre-wrap">{v}</span></div>;
+}
+
+/** Inline editor for the extra fields imported from the spreadsheet. */
+function ExtrasEditor({ clientId, fields, orig }: { clientId: string; fields: [string, unknown][]; orig: Record<string, Json> }) {
+  const invalidate = useInvalidateAll();
+  const [draft, setDraft] = useState<Record<string, string>>(() =>
+    Object.fromEntries(fields.map(([k, v]) => [k, String(v ?? "")])),
+  );
+  const [removed, setRemoved] = useState<string[]>([]);
+  const [busy, setBusy] = useState(false);
+  const visible = fields.filter(([k]) => !removed.includes(k));
+  const dirty = fields.some(([k, v]) => String(v ?? "") !== draft[k]) || removed.length > 0;
+
+  async function save() {
+    setBusy(true);
+    const next: Record<string, Json> = { ...orig };
+    for (const [k, v] of Object.entries(draft)) next[k] = v;
+    for (const k of removed) next[k] = null;
+    const { error } = await supabase
+      .from("clients")
+      .update({ extra_fields: next, updated_at: new Date().toISOString() })
+      .eq("id", clientId);
+    setBusy(false);
+    if (error) {
+      toast.error("Erro ao salvar: " + error.message);
+      return;
+    }
+    toast.success("Dados atualizados");
+    invalidate();
+  }
+
+  return (
+    <div className="border-t pt-3 md:col-span-2">
+      <div className="mb-2 text-xs uppercase text-muted-foreground">Outros dados da planilha</div>
+      <div className="grid gap-2 md:grid-cols-2">
+        {visible.map(([k]) => (
+          <div key={k} className="flex items-center gap-2">
+            <div className="w-28 shrink-0 truncate text-xs text-muted-foreground" title={k}>{k}</div>
+            <Input
+              className="h-9 flex-1"
+              value={draft[k] ?? ""}
+              onChange={(e) => setDraft((p) => ({ ...p, [k]: e.target.value }))}
+            />
+            <button
+              className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-destructive"
+              aria-label={`Remover ${k}`}
+              onClick={() => setRemoved((p) => [...p, k])}
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        ))}
+      </div>
+      {dirty && (
+        <Button size="sm" className="mt-3" onClick={save} disabled={busy}>
+          Salvar alterações
+        </Button>
+      )}
+    </div>
+  );
 }
